@@ -1,3 +1,4 @@
+
 services:
   ai-agent-api:
     build:
@@ -6,4 +7,5 @@ services:
     container_name: ai-agent-api
     ports:
       - "8000:8000"
-
+    env_file:
+      - .env

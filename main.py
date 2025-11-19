@@ -1,7 +1,20 @@
+import os
+
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from pydantic import BaseModel
 
 app = FastAPI()
+
+
+# Load .env filen
+load_dotenv()
+
+# Hent API nøgle fra miljøvariabel
+API_KEY = os.getenv("API_KEY")
+
+if not API_KEY:
+    raise ValueError("API_KEY is not set in environment variables!")
 
 
 # -------- DTO --------
