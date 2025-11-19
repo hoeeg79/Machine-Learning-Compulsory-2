@@ -5,7 +5,6 @@ mistralai==1.2.3
 ollama==0.3.3
 fix-busted-json==0.0.18
 
-
 fastapi
 uvicorn
 python-dotenv
