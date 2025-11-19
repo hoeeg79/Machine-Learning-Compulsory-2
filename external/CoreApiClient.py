@@ -3,6 +3,8 @@ from typing import Type, TypeVar, List
 
 from pydantic import BaseModel
 
+from models.core_models import CoreWork
+
 T = TypeVar("T", bound=BaseModel)
 
 class CoreApiClient:
