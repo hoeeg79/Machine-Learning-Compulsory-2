@@ -1,7 +1,7 @@
-# todo sej agent
+import autogen
 
 def create_user_proxy():
-    user_proxy = UserProxyAgent(
+    user_proxy = autogen.UserProxyAgent(
         name="user_proxy",
         human_input_mode="NEVER",
         max_consecutive_auto_reply=5,

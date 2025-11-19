@@ -1,5 +1,7 @@
+import autogen
+
 def create_critic_agent():
-    critic_agent = AssistentAgent(
+    critic_agent = autogen.AssistantAgent(
         name="critic",
         system_message=(
             "You are an internal critic reviewing the work of another agent.\n"
