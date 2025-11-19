@@ -43,3 +43,16 @@ LLM_CONFIG = {
         }
     ]
 }
+
+
+# todo eksempel på brug af core klienten
+"""
+API_KEY = "DIN_CORE_API_KEY_HER"
+client = CoreApiClient(API_KEY)
+
+# Hent 5 artikler om "smoking" og parse direkte til CoreWork
+works: List[CoreWork] = client.search_works(query="smoking", limit=5)
+
+for work in works:
+    print(f"{work.title} ({work.yearPublished}) - DOI: {work.doi}")
+"""
