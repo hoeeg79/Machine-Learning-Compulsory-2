@@ -3,6 +3,10 @@ import os
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from pydantic import BaseModel
+import autogen
+from internal.agents import critic_agent
+from internal.agents import search_agent
+from internal.agents import user_proxy_agent
 
 app = FastAPI()
 
@@ -39,6 +43,33 @@ def search_paper(dto: SearchPaperRequest):
         "data": dto
     }
 
+def start_group_agents(dto: SearchPaperRequest):
+    critic = critic_agent.create_critic_agent()
+    search = search_agent.create_search_agent(LLM_CONFIG)
+    user_proxy = user_proxy_agent.create_user_proxy()
+
+    group = autogen.GroupChat(
+        agents=[critic, search, user_proxy],
+        messages=[],
+        max_round=50,
+        speaker_selection_method="auto"
+    )
+
+    manager = autogen.GroupChatManager(
+        groupchat=group,
+        llm_config=LLM_CONFIG
+    )
+
+    user_proxy.initiate_chat(
+        manager=manager,
+        message=(
+            "Task: Search for academic papers on the topic: "f"{dto.topic}, "
+            f"with a year constraint: {dto.year_constraint} {dto.year}, "
+            f"and a minimum of {dto.min_citations} citations."
+            "Make sure that the papers are relevant and meet the criteria."
+            "Stop when you have found suitable papers and print 'TERMINATE'."
+        )
+    )
 
 LLM_CONFIG = {
     "config_list": [
