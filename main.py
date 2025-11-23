@@ -14,6 +14,7 @@ app = FastAPI()
 # Load .env filen
 load_dotenv()
 
+# !!! HAR JEG IMPORTERET DENNE KORREKT INDE I api_tool.py? !!!
 # Hent API nøgle fra miljøvariabel
 API_KEY = os.getenv("API_KEY")
 

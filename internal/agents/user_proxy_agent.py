@@ -1,4 +1,5 @@
 import autogen
+from internal.agents.Tools.api_tool import call_api_tool
 
 def create_user_proxy():
     user_proxy = autogen.UserProxyAgent(
@@ -7,5 +8,5 @@ def create_user_proxy():
         max_consecutive_auto_reply=5,
         is_termination_msg=lambda msg: msg.get("content") is not None and "TERMINATE" in msg["content"]
     )
-    user_proxy.register_for_execution(name="calculator")(calculator)
+    user_proxy.register_for_execution(name="api_tool")(call_api_tool)
     return user_proxy

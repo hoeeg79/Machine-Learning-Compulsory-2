@@ -1,4 +1,5 @@
 import autogen
+from internal.agents.Tools.api_tool import call_api_tool
 
 def create_search_agent(LLM_CONFIG):
     assistant = autogen.AssistantAgent(
@@ -9,7 +10,10 @@ def create_search_agent(LLM_CONFIG):
                 First come up with 4 synonyms or related terms for the topic.
                 The search query should be contructed the following way:
                 "q=yearPublished>2018 AND (fullText:"TOPIC" OR fullText:"FIRST SYNONYM" OR fullText:"SECOND SYNONYM" OR fullText:"THIRD SYNONYM" OR fullText:"FOURTH SYNONYM")"
+                The tool to use for the search is "api_tool".
             """,
         llm_config=LLM_CONFIG,
     )
+    assistant.register_for_llm(name="api_tool", description="Call api")(call_api_tool)
+
     return assistant
