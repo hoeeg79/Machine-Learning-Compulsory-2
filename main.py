@@ -58,7 +58,7 @@ async def start_group_agents(dto: SearchPaperRequest):
     user_proxy = user_proxy_agent.create_user_proxy()
 
     group = autogen.GroupChat(
-        agents=[search, critic, user_proxy],
+        agents=[search, user_proxy, critic],
         messages=[],
         max_round=5,
         speaker_selection_method="auto",

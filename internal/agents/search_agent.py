@@ -13,7 +13,11 @@ def create_search_agent(LLM_CONFIG):
             """,
         llm_config=LLM_CONFIG,
     )
-    assistant.register_for_execution(name="api_tool")(call_api_tool)
+
+    assistant.register_for_llm(
+        name="api_tool",
+        description="Calls the CORE API"
+    )(call_api_tool)
 
     return assistant
 
