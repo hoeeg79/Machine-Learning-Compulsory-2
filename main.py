@@ -22,10 +22,13 @@ load_dotenv()
 # !!! HAR JEG IMPORTERET DENNE KORREKT INDE I api_tool.py? !!!
 # Hent API nøgle fra miljøvariabel
 API_KEY = os.getenv("API_KEY")
+AI_API_KEY = os.getenv("AI_API_KEY")
 
 if not API_KEY:
     raise ValueError("API_KEY is not set in environment variables!")
 
+if not AI_API_KEY:
+    raise ValueError("AI_API_KEY is not set in environment variables!")
 
 # -------- DTO --------
 class SearchPaperRequest(BaseModel):
@@ -37,28 +40,28 @@ class SearchPaperRequest(BaseModel):
 
 # -------- Endpoint --------
 @app.post("/searchpaper")
-def search_paper(dto: SearchPaperRequest):
+async def search_paper(dto: SearchPaperRequest):
     """
     Endpoint der modtager en DTO og returnerer den (eller hvad du vil gøre med den).
     """
     # todo Lav en prompt ud fra json body
     # todo aflever prompt til agent
-
+    await start_group_agents(dto)
     return {
         "message": "DTO modtaget",
         "data": dto
     }
 
-def start_group_agents(dto: SearchPaperRequest):
-    critic = critic_agent.create_critic_agent()
+async def start_group_agents(dto: SearchPaperRequest):
+    critic = critic_agent.create_critic_agent(LLM_CONFIG)
     search = search_agent.create_search_agent(LLM_CONFIG)
     user_proxy = user_proxy_agent.create_user_proxy()
 
     group = autogen.GroupChat(
-        agents=[critic, search, user_proxy],
+        agents=[search, critic, user_proxy],
         messages=[],
-        max_round=50,
-        speaker_selection_method="auto"
+        max_round=3,
+        speaker_selection_method="round_robin"
     )
 
     manager = autogen.GroupChatManager(
@@ -67,7 +70,7 @@ def start_group_agents(dto: SearchPaperRequest):
     )
 
     user_proxy.initiate_chat(
-        manager=manager,
+        manager,
         message=(
             "Task: Search for academic papers on the topic: "f"{dto.topic}, "
             f"with a year constraint: {dto.year_constraint} {dto.year}, "
@@ -81,7 +84,7 @@ LLM_CONFIG = {
     "config_list": [
         {
             "model": "open-mistral-nemo",
-            "api_key": "[YOUR_API_KEY]",
+            "api_key": AI_API_KEY,
             "api_type": "mistral",
             "api_rate_limit": 0.25,
             "repeat_penalty": 1.1,
