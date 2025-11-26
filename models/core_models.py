@@ -43,7 +43,6 @@ class CoreWork(BaseModel):
     oaiIds: List[str] = []
     outputs: List[str] = []
     sourceFulltextUrls: List[str] = []
-    language: Optional[Language]
     dataProviders: List[DataProvider] = []
     identifiers: List[Identifier] = []
     links: List[Link] = []
