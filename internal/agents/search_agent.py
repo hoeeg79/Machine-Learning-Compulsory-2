@@ -7,7 +7,8 @@ def create_search_agent(LLM_CONFIG):
         system_message="""
                 Your task is to create search prompts based on user requests for academic papers.
                 When the user provides a topic, year constraint (in, before, after), year. 
-                You should take the topic and suggest it for use as param with the tool you suggest.
+                You should take the topic and tell which tool you suggest.
+                example of search: "TOPIC".
                 The tool to use for the search is "api_tool".
             """,
         llm_config=LLM_CONFIG,

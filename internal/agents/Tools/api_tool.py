@@ -24,9 +24,11 @@ def call_api_tool(query: str) -> List[CoreWork]:
         text_chunks = split_text(res.fullText, chunk_size=500)
 
         # Tilføj en ny attribut til objektet til chunks
-        res.fullText = text_chunks[0]  # dynamisk tilføjet felt
-        results.append(res)
+        res.fullText = text_chunks[0]
 
+        # convert pydantic model -> dict
+        results.append(res.model_dump()) 
+    
     return results
 
 

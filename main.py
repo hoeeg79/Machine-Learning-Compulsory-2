@@ -60,8 +60,8 @@ async def start_group_agents(dto: SearchPaperRequest):
     group = autogen.GroupChat(
         agents=[search, critic, user_proxy],
         messages=[],
-        max_round=3,
-        speaker_selection_method="round_robin"
+        max_round=5,
+        speaker_selection_method="round_robin",
     )
 
     manager = autogen.GroupChatManager(
