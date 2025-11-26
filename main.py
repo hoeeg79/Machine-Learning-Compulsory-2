@@ -61,12 +61,11 @@ async def start_group_agents(dto: SearchPaperRequest):
         agents=[search, critic, user_proxy],
         messages=[],
         max_round=5,
-        speaker_selection_method="round_robin",
+        speaker_selection_method="auto",
     )
 
     manager = autogen.GroupChatManager(
-        groupchat=group,
-        llm_config=LLM_CONFIG
+        groupchat=group
     )
 
     user_proxy.initiate_chat(
@@ -76,7 +75,7 @@ async def start_group_agents(dto: SearchPaperRequest):
             f"with a year constraint: {dto.year_constraint} {dto.year}, "
             f"and a minimum of {dto.min_citations} citations."
             "Make sure that the papers are relevant and meet the criteria."
-            "Stop when you have found suitable papers and print 'TERMINATE'."
+            "when you have found suitable papers and print 'TERMINATE' after the critic has accepted it."
         )
     )
 
