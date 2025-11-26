@@ -10,6 +10,7 @@ from external.CoreApiClient import CoreApiClient
 from internal.agents import critic_agent
 from internal.agents import search_agent
 from internal.agents import user_proxy_agent
+from internal.agents.Tools.api_tool import call_api_tool
 from models.core_models import CoreWork
 
 app = FastAPI()
@@ -119,14 +120,11 @@ def get_core_client() -> CoreApiClient:
 @app.get("/core/search", response_model=List[CoreWork])
 def search_core_works(
     query: str = "_exists_:doi",
-    limit: int = 10,
-    offset: int = 0,
-    client: CoreApiClient = Depends(get_core_client)
 ):
     """
     Endpoint der søger i CORE API og returnerer en liste CoreWork-modeller.
     """
     try:
-        return client.search_works(query=query, limit=limit, offset=offset)
+        return call_api_tool(query)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
