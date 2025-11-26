@@ -19,19 +19,20 @@ class Language(BaseModel):
     code: str
     name: str
 
+
+class Author(BaseModel):
+    name: str
+
+
 class CoreWork(BaseModel):
     id: int
     title: str
-    authors: List[str]
+    authors: Optional[List[Author]] = None
     yearPublished: Optional[int]
     doi: Optional[str]
-    description: Optional[str]
+    description: Optional[str] = None
     downloadUrl: Optional[str]
-    publishedDate: Optional[str]
-    acceptedDate: Optional[str]
     depositedDate: Optional[str]
-    createdDate: Optional[str]
-    updatedDate: Optional[str]
     arxivId: Optional[str]
     citationCount: Optional[int]
     documentType: Optional[str]
@@ -42,7 +43,6 @@ class CoreWork(BaseModel):
     oaiIds: List[str] = []
     outputs: List[str] = []
     sourceFulltextUrls: List[str] = []
-    journals: List[str] = []
     language: Optional[Language]
     dataProviders: List[DataProvider] = []
     identifiers: List[Identifier] = []

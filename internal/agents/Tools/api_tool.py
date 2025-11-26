@@ -1,7 +1,13 @@
 import os
 
+from dotenv import load_dotenv
+
 from external.CoreApiClient import CoreApiClient
-from main import API_KEY
+
+load_dotenv()
+
+# Hent API nøgle fra miljøvariabel
+API_KEY = os.getenv("API_KEY")
 
 def call_api_tool(query: str):
     client = CoreApiClient(API_KEY)

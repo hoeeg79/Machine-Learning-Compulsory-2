@@ -22,4 +22,8 @@ class CoreApiClient:
         response.raise_for_status()
         data = response.json()
         results = data.get("results", [])
+        print("response")
+        print("")
+
+        print(response.json())
         return [model.parse_obj(r) for r in results]
