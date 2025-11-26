@@ -1,12 +1,16 @@
 import os
+from typing import List
 
 from dotenv import load_dotenv
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException
 from pydantic import BaseModel
 import autogen
+
+from external.CoreApiClient import CoreApiClient
 from internal.agents import critic_agent
 from internal.agents import search_agent
 from internal.agents import user_proxy_agent
+from models.core_models import CoreWork
 
 app = FastAPI()
 
@@ -101,3 +105,28 @@ works: List[CoreWork] = client.search_works(query="smoking", limit=5)
 for work in works:
     print(f"{work.title} ({work.yearPublished}) - DOI: {work.doi}")
 """
+
+
+
+
+def get_core_client() -> CoreApiClient:
+    if not API_KEY:
+        raise RuntimeError("CORE_API_KEY is missing in environment variables")
+    return CoreApiClient(api_key=API_KEY)
+
+
+
+@app.get("/core/search", response_model=List[CoreWork])
+def search_core_works(
+    query: str = "_exists_:doi",
+    limit: int = 10,
+    offset: int = 0,
+    client: CoreApiClient = Depends(get_core_client)
+):
+    """
+    Endpoint der søger i CORE API og returnerer en liste CoreWork-modeller.
+    """
+    try:
+        return client.search_works(query=query, limit=limit, offset=offset)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
