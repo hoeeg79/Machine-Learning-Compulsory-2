@@ -9,6 +9,7 @@ import autogen
 from external.CoreApiClient import CoreApiClient
 from internal.agents import critic_agent
 from internal.agents import search_agent
+from internal.agents import summarize_agent
 from internal.agents import user_proxy_agent
 from internal.agents.Tools.api_tool import call_api_tool
 from models.core_models import CoreWork
@@ -55,17 +56,22 @@ async def search_paper(dto: SearchPaperRequest):
 async def start_group_agents(dto: SearchPaperRequest):
     critic = critic_agent.create_critic_agent(LLM_CONFIG)
     search = search_agent.create_search_agent(LLM_CONFIG)
+    summarize = summarize_agent.create_summarize_agent(LLM_CONFIG)
     user_proxy = user_proxy_agent.create_user_proxy()
 
     group = autogen.GroupChat(
-        agents=[search, critic, user_proxy],
+        agents=[search, critic, summarize, user_proxy],
         messages=[],
-        max_round=5,
+        max_round=10,
         speaker_selection_method="auto",
+        send_introductions=True,
+        allow_repeat_speaker=False,
+        role_for_select_speaker_messages="assistant", 
     )
 
     manager = autogen.GroupChatManager(
-        groupchat=group
+        groupchat=group,
+        llm_config=LLM_CONFIG
     )
 
     user_proxy.initiate_chat(
@@ -75,14 +81,14 @@ async def start_group_agents(dto: SearchPaperRequest):
             f"with a year constraint: {dto.year_constraint} {dto.year}, "
             f"and a minimum of {dto.min_citations} citations."
             "Make sure that the papers are relevant and meet the criteria."
-            "when you have found suitable papers and print 'TERMINATE' after the critic has accepted it."
-        )
+        ),
+        summary_method="reflection_with_llm"
     )
 
 LLM_CONFIG = {
     "config_list": [
         {
-            "model": "open-mistral-nemo",
+            "model": "mistral-small-2503",
             "api_key": AI_API_KEY,
             "api_type": "mistral",
             "api_rate_limit": 0.25,

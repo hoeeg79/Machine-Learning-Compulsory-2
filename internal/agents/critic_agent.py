@@ -1,4 +1,5 @@
 import autogen
+from internal.agents.Tools.api_tool import call_api_tool
 
 def create_critic_agent(LLM_CONFIG):
     critic_agent = autogen.AssistantAgent(
@@ -20,6 +21,8 @@ def create_critic_agent(LLM_CONFIG):
             TERMINATE
             """
         ),
+        max_consecutive_auto_reply=2,
         llm_config=LLM_CONFIG
     )
+
     return critic_agent

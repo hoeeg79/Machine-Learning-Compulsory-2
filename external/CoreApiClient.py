@@ -13,7 +13,7 @@ class CoreApiClient:
     def __init__(self, api_key: str):
         self.headers = {"Authorization": f"Bearer {api_key}"}
 
-    def search_works(self, query: str = "_exists_:doi", limit: int = 3, offset: int = 0, model: Type[T] = CoreWork) -> List[CoreWork]:
+    def search_works(self, query: str = "_exists_:doi", limit: int = 6, offset: int = 0, model: Type[T] = CoreWork) -> List[CoreWork]:
         """
         Søgning i CORE API og returnér en liste af Pydantic-modeller.
         """

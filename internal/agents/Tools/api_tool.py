@@ -1,6 +1,6 @@
 import json
 import os
-from typing import List
+from typing import Any, Dict, List
 
 from dotenv import load_dotenv
 from mistralai import ToolMessage, TextChunk
@@ -18,16 +18,17 @@ def call_api_tool(query: str) -> ToolMessage:
     client = CoreApiClient(API_KEY)
     response = client.search_works(query=query)
 
-    chunks = []
+    results: List[Dict[str, Any]] = []
     for res in response:
-        text_chunks = split_text(res.fullText, chunk_size=50)
-        first_chunk = text_chunks[0] if text_chunks else ""
-        chunks.append(TextChunk(text=f"{res.title} ({res.yearPublished})\n{first_chunk}"))
+        # mutate model if you want
+        res.fullText = (res.fullText or "")[:500]
 
-    return ToolMessage(
-        content=chunks,
-        tool_name="api_tool"
-    )
+        # convert pydantic model -> dict
+        results.append(res.model_dump())   # ✅ Pydantic v2
+        # if you're on pydantic v1, use: res.dict()
+
+    return results
+    
 
 
 def split_text(text: str, chunk_size: int = 50) -> List[str]:
