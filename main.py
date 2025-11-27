@@ -20,7 +20,6 @@ app = FastAPI()
 # Load .env filen
 load_dotenv()
 
-# !!! HAR JEG IMPORTERET DENNE KORREKT INDE I api_tool.py? !!!
 # Hent API nøgle fra miljøvariabel
 API_KEY = os.getenv("API_KEY")
 AI_API_KEY = os.getenv("AI_API_KEY")
@@ -52,6 +51,37 @@ async def search_paper(dto: SearchPaperRequest):
         "message": "DTO modtaget",
         "data": dto
     }
+
+LLM_CEREBRAS_CONFIG = {
+    "config_list": [
+        {
+            "model": "llama-3.3-70b",
+            "api_key": AI_API_KEY,
+            "api_type": "cerebras",
+            "max_tokens": 10000,
+            "seed": 1234,
+            "stream": False,
+            "temperature": 0.0,
+        }
+    ]
+}
+
+LLM_MISTRAL_CONFIG = {
+    "config_list": [
+        {
+            "model": "open-mistral-nemo-2407",
+            "api_key": AI_API_KEY,
+            "api_type": "mistral",
+            "api_rate_limit": 0.25,
+            "repeat_penalty": 1.1,
+            "temperature": 0.0,
+            "seed": 42,
+            "stream": False,
+            "native_tool_calls": False,
+            "cache_seed": None,
+        }
+    ]
+}
 
 async def start_group_agents(dto: SearchPaperRequest):
     critic = critic_agent.create_critic_agent(LLM_CEREBRAS_CONFIG)
@@ -86,36 +116,7 @@ async def start_group_agents(dto: SearchPaperRequest):
         summary_method="reflection_with_llm"
     )
 
-LLM_MISTRAL_CONFIG = {
-    "config_list": [
-        {
-            "model": "open-mistral-nemo-2407",
-            "api_key": AI_API_KEY,
-            "api_type": "mistral",
-            "api_rate_limit": 0.25,
-            "repeat_penalty": 1.1,
-            "temperature": 0.0,
-            "seed": 42,
-            "stream": False,
-            "native_tool_calls": False,
-            "cache_seed": None,
-        }
-    ]
-}
 
-LLM_CEREBRAS_CONFIG = {
-    "config_list": [
-        {
-            "model": "llama-3.3-70b",
-            "api_key": AI_API_KEY,
-            "api_type": "cerebras",
-            "max_tokens": 10000,
-            "seed": 1234,
-            "stream": False,
-            "temperature": 0.0,
-        }
-    ]
-}
 
 
 # todo eksempel på brug af core klienten

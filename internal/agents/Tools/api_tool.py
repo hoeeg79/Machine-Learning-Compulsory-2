@@ -28,11 +28,3 @@ def call_api_tool(query: str) -> ToolMessage:
         # if you're on pydantic v1, use: res.dict()
 
     return results
-    
-
-
-def split_text(text: str, chunk_size: int = 50) -> List[str]:
-    """
-    Deler teksten op i bidder af chunk_size tegn.
-    """
-    return [text[i:i+chunk_size] for i in range(0, len(text), chunk_size)]

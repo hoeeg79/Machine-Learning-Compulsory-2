@@ -23,9 +23,3 @@ def create_critic_agent(LLM_CONFIG):
     )
 
     return critic_agent
-
-# If it fulfills the requirements completely, respond **exactly** with the word TERMINATE
-#            on a line by itself, with nothing else, no quotes, no symbols.
-#            Example:
-#        
-#            TERMINATE

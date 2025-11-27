@@ -22,6 +22,5 @@ def create_summarize_agent(LLM_CONFIG):
         ),
         llm_config=LLM_CONFIG
     )
-
-    # summarize_agent.register_for_llm(name="api_tool", description="Call api")(call_api_tool)
+    
     return summarize_agent
