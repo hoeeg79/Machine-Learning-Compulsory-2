@@ -8,5 +8,5 @@ def create_user_proxy():
         is_termination_msg=lambda msg: msg.get("content") is not None and "TERMINATE" in msg["content"]
     )
     
-    # user_proxy.register_for_execution(name="api_tool")(call_api_tool)
+    user_proxy.register_for_execution(name="api_tool")(call_api_tool)
     return user_proxy
