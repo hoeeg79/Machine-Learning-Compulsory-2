@@ -1,5 +1,5 @@
 autogen-agentchat @ git+https://github.com/patrickstolc/autogen.git@0.2#egg=autogen-agentchat
-autogen-agentchat[jupyter-executor]~=0.2
+autogen-agentchat[cerebras]~=0.2
 autogen==0.3.1
 mistralai==1.2.3
 ollama==0.3.3

@@ -54,9 +54,9 @@ async def search_paper(dto: SearchPaperRequest):
     }
 
 async def start_group_agents(dto: SearchPaperRequest):
-    critic = critic_agent.create_critic_agent(LLM_CONFIG)
-    search = search_agent.create_search_agent(LLM_CONFIG)
-    summarize = summarize_agent.create_summarize_agent(LLM_CONFIG)
+    critic = critic_agent.create_critic_agent(LLM_CEREBRAS_CONFIG)
+    search = search_agent.create_search_agent(LLM_CEREBRAS_CONFIG)
+    summarize = summarize_agent.create_summarize_agent(LLM_CEREBRAS_CONFIG)
     user_proxy = user_proxy_agent.create_user_proxy()
 
     group = autogen.GroupChat(
@@ -71,7 +71,8 @@ async def start_group_agents(dto: SearchPaperRequest):
 
     manager = autogen.GroupChatManager(
         groupchat=group,
-        llm_config=LLM_CONFIG
+        llm_config=LLM_CEREBRAS_CONFIG,
+        is_termination_msg=lambda msg: msg.get("content") is not None and "TERMINATE" in msg["content"]
     )
 
     user_proxy.initiate_chat(
@@ -85,10 +86,10 @@ async def start_group_agents(dto: SearchPaperRequest):
         summary_method="reflection_with_llm"
     )
 
-LLM_CONFIG = {
+LLM_MISTRAL_CONFIG = {
     "config_list": [
         {
-            "model": "mistral-small-2503",
+            "model": "open-mistral-nemo-2407",
             "api_key": AI_API_KEY,
             "api_type": "mistral",
             "api_rate_limit": 0.25,
@@ -98,6 +99,20 @@ LLM_CONFIG = {
             "stream": False,
             "native_tool_calls": False,
             "cache_seed": None,
+        }
+    ]
+}
+
+LLM_CEREBRAS_CONFIG = {
+    "config_list": [
+        {
+            "model": "llama-3.3-70b",
+            "api_key": AI_API_KEY,
+            "api_type": "cerebras",
+            "max_tokens": 10000,
+            "seed": 1234,
+            "stream": False,
+            "temperature": 0.0,
         }
     ]
 }

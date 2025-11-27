@@ -11,7 +11,8 @@ def create_search_agent(LLM_CONFIG):
                 example of search: "TOPIC".
                 The tool to use for the search is "api_tool".
 
-                
+                If asked again, to improve the search, you should think of a synonym for the topic, 
+                and use it to create a new search query, and execute the tool again.
             """,
         max_consecutive_auto_reply=2,
         llm_config=LLM_CONFIG,

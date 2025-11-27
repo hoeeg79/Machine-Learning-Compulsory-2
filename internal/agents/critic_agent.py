@@ -11,14 +11,11 @@ def create_critic_agent(LLM_CONFIG):
             If the paper is satisfactory, respond with:
         
             APPROVED
+            TERMINATE
         
             If the paper does not meet the requirements, provide constructive feedback on what needs to be improved.
         
-            If it fulfills the requirements completely, respond **exactly** with the word TERMINATE
-            on a line by itself, with nothing else, no quotes, no symbols.
-            Example:
-        
-            TERMINATE
+            
             """
         ),
         max_consecutive_auto_reply=2,
@@ -26,3 +23,9 @@ def create_critic_agent(LLM_CONFIG):
     )
 
     return critic_agent
+
+# If it fulfills the requirements completely, respond **exactly** with the word TERMINATE
+#            on a line by itself, with nothing else, no quotes, no symbols.
+#            Example:
+#        
+#            TERMINATE
