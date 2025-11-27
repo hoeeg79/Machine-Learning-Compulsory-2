@@ -1,31 +1,47 @@
-# Assignment Description:
-The goal of this assignment is to apply the concepts you've learned to implement and evaulate an AI agent.
+# Research Paper Lookup Helper
 
-# 01. Implement an AI agent
-Using the Autogen framework, implement an AI agent that can solve the following type of task:
+This project is the second compulsory of Machine Learning at EASV. It evovles around making use of LLMs as AI agents, tools and autogen, to look for research papers via an API.
 
-Find a research paper on [topic] that was published [in/before/after] [year] and has [number of citations] citations.
+## Initial Setup
 
-Square brackets:
+You will need to get an API key for the CORE API. This can be found here: https://core.ac.uk/services/api
+
+You will also need an API key for either MistralAI or Cerebras. Given which you chose, minor changes are needed in main, to align. At the moment it is setup for Cerebras.
+
+Now that you have your keys, make a ".env" file in root of the directory, and add two lines like this:
+
 ```
-The square brackets are placeholders for the actual topic, year, number of citations, etc.
+API_KEY=[YOUR_API_KEY_HERE]
+AI_API_KEY=[YOUR_AI_KEY_HERE]
 ```
 
-# 02. Implement the required tools
-In order to solve the task, the agent will need to search for research papers based on publishing year, number of citations, etc.
+## How to Run
 
-To do this, the agent could use the following tools:
-- A web search tool
-- A research paper database
-- A research paper search API
+You have two options to run it. When you have turned it on you can use swagger on localhost:8000/docs to access the endpoint.
 
-Your task is to implement one of these, or a similar tool that provides your agent with the ability to search for research papers based on publishing year, number of citations, etc.
+### Option 1: Docker
 
-# 03. Evaluate the agent
-Once you've implemented the agent, you need to evaluate how it performs on the task. As described in the lecture on agent evaluation you can rely on the underlying LLM to evaluate how your agent performs.
+This is the easiest option. All you need to do is start the docker compose:
 
-# Cloud-based LLM
-This assignment will be difficult to run locally due to its complexity. To make it possible for you to complete the assignment, you can make use of a cloud-based LLM and a fork of the Autogen framework.
+```
+docker compose up
+```
 
-## Mistral AI
-The Mistral AI cloud API has a generous free tier that you can use. You need to create an account and then create an API key through their platform.
+### Option 2: Run locally
+
+We strongly recommend you setup a virtual environment if you run locally. To run it, first you have to install requirements. 
+
+In a terminal, find your way to the root folder and run:
+
+```
+pip install -r req.txt
+```
+
+Now you can start the project by running:
+```
+uvicorn main:app
+```
+
+## Changes to use Mistral AI
+
+If you want to use Mistral AI instead. you will need to change which config is used in the agents. In main.py, simply change the LLM_CONFIG used as parameter to instantiate the agents, to the mistral AI config, instead of Cerebras config.
